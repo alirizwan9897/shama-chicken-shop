@@ -20,4 +20,11 @@ app.use(
 
 app.use("/api/users", usersRouter);
 
+if (require.main === module) {
+  const port = Number(process.env.PORT || 4000);
+  app.listen(port, () => {
+    console.log(`API server listening on port ${port}`);
+  });
+}
+
 module.exports = app;
