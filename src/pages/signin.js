@@ -17,9 +17,7 @@ export default function Signin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:4000/api/users/login", formData
-      );
+      const response = await axios.post("/api/users/login", formData);
       console.log("Login successful:", response.data);
       alert("Login successful!");
       // Login ke baad Home Page

@@ -17,7 +17,7 @@ export default function Signup() {
     e.preventDefault();
     console.log("Complete form Data", formData)
     try {
-      const response = await axios.post("http://localhost:4000/api/users/create", formData);
+      const response = await axios.post("/api/users/create", formData);
       console.log('user created ', response.data)
       router.push("/signin");
     }
