@@ -11,7 +11,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://shama-chicken-shop.vercel.app"
+      "https://shama-chicken-shop.vercel.app",
+      "https://shama-chicken-shop-f8vd-8h1lj2r6h-alirizwan9897s-projects.vercel.app",
     ],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true
