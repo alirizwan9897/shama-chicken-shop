@@ -5,15 +5,25 @@ const usersRouter = require("./api/users");
 
 const app = express();
 
+const allowedOrigins = new Set([
+  "http://localhost:3000",
+  "https://shama-chicken-shop.vercel.app",
+]);
+
+function isAllowedOrigin(origin) {
+  if (!origin) return true;
+  if (allowedOrigins.has(origin)) return true;
+  return /^https:\/\/shama-chicken-shop-[a-z0-9-]+\.vercel\.app$/i.test(origin);
+}
+
 app.use(express.json());
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://shama-chicken-shop.vercel.app",
-      "https://shama-chicken-shop-f8vd-8h1lj2r6h-alirizwan9897s-projects.vercel.app",
-    ],
+    origin: (origin, callback) => {
+      if (isAllowedOrigin(origin)) return callback(null, true);
+      return callback(new Error(`CORS origin not allowed: ${origin}`));
+    },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true
   })
