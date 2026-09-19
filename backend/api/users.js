@@ -50,12 +50,20 @@ router.post('/login', async (req, res) => {
   }
 });
 router.get('/get', async (req, res) => {
+  console.log('[users/get] Request received; checking database connection');
   try {
     const result = await pool.query(
       'SELECT id, name, phone, email, role, created_at FROM users ORDER BY id'
     );
+    console.log(`[users/get] Database query succeeded; returned ${result.rowCount} users`);
     return res.status(200).json(result.rows);
   } catch (error) {
+    console.error('[users/get] Database query failed:', {
+      message: error.message,
+      code: error.code,
+      detail: error.detail,
+      hint: error.hint,
+    });
     return handleDatabaseError(error, res);
   }
 });
