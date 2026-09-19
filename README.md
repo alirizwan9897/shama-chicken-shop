@@ -27,13 +27,18 @@ npm run api
 The API runs at `http://localhost:4000` by default:
 
 ```text
-POST   /api/users/create
+POST   /api/users/signup
 GET    /api/users/get
 GET    /api/users/:id
 PUT    /api/users/:id
 PATCH  /api/users/:id
 DELETE /api/users/:id
 ```
+
+The API requires PostgreSQL. For local development, configure `PGHOST`, `PGUSER`,
+`PGPORT`, `PGPASSWORD`, and `PGDATABASE` (or use a `DATABASE_URL`). For Vercel,
+add `DATABASE_URL` in the project's Environment Variables and redeploy. The
+database must be hosted externally; `localhost` is not available inside Vercel.
 
 Create a user by sending JSON with `name`, `email`, and `password`. The optional `role` defaults to `user`.
 

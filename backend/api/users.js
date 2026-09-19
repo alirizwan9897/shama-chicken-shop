@@ -2,7 +2,7 @@ const express = require('express');
 const pool = require('../maindb');
 const { hashPassword, verifyPassword, publicUser, validateUserInput } = require('../users');
 const router = express.Router();
-router.post('/create', async (req, res) => {
+router.post('/signup', async (req, res) => {
   try {
     const validation = validateUserInput(req.body);
     if (validation.error) return res.status(400).json({ error: validation.error });

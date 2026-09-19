@@ -1,5 +1,11 @@
 require('dotenv').config();
 const { Pool } = require('pg');
+const isVercel = Boolean(process.env.VERCEL);
+
+if (isVercel && !process.env.DATABASE_URL && !process.env.PGHOST) {
+  throw new Error('[database] Missing DATABASE_URL or PGHOST in Vercel environment variables');
+}
+
 const databaseConfig = process.env.DATABASE_URL
   ? {
     connectionString: process.env.DATABASE_URL,
@@ -17,6 +23,8 @@ const pool = new Pool({
   ...databaseConfig,
   max: 10,
 });
+
+console.log(`[database] Configuration source: ${process.env.DATABASE_URL ? 'DATABASE_URL' : 'PGHOST/PG* variables'}`);
 
 pool.on('connect', () => {
   console.log('[database] PostgreSQL connection established');
