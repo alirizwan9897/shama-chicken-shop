@@ -24,14 +24,11 @@ export default function Signin() {
           password: formData.password
         }
       );
-
       console.log('Login successful:', response.data);
-
       localStorage.setItem(
         'shama-chicken-shop-auth',
         JSON.stringify(response.data.user)
       );
-
       router.push('/');
     } catch (error) {
       console.log("Login failed");
