@@ -53,7 +53,10 @@ export default function Signup() {
           placeholder="Password"
           value={formData.password}
           onChange={handleChange}
+          minLength={8}
+
         />
+
         <button type="submit">Sign Up</button>
       </form>
     </div>

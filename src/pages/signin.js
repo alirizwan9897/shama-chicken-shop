@@ -17,11 +17,22 @@ export default function Signin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("https://shama-chicken-shop.vercel.app/api/users/login", formData);
-      console.log("Login successful:", response.data);
-      alert("Login successful!");
-      // Login ke baad Home Page
-      router.push("/");
+      const response = await axios.post(
+        'http://localhost:4000/api/users/login',
+        {
+          email: formData.email,
+          password: formData.password
+        }
+      );
+
+      console.log('Login successful:', response.data);
+
+      localStorage.setItem(
+        'shama-chicken-shop-auth',
+        JSON.stringify(response.data.user)
+      );
+
+      router.push('/');
     } catch (error) {
       console.log("Login failed");
       console.log("Status:", error.response?.status);
