@@ -22,7 +22,6 @@ export default function MobileSignup() {
     let otp = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a random 6-digit OTP
     console.log('Phone number submitted:', phone);
     console.log('Generated OTP:', otp);
-
     setGeneratedOtp(otp);
     setLoginForm(false); // Switch to OTP form after phone number submission  
   }

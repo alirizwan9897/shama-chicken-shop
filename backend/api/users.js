@@ -6,13 +6,11 @@ router.post('/signup', async (req, res) => {
   try {
     const validation = validateUserInput(req.body);
     if (validation.error) return res.status(400).json({ error: validation.error });
-
     const { name, phone, email, password, role = 'user' } = validation.value;
     const result = await pool.query(
       'INSERT INTO users (name, phone, email, password, role) VALUES ($1, $2, $3, $4, $5) RETURNING id, name, phone, email, role, created_at',
       [name.trim(), phone.trim(), email.trim().toLowerCase(), hashPassword(password), role]
     );
-
     return res.status(201).json(publicUser(result.rows[0]));
   } catch (error) {
     return handleDatabaseError(error, res);
@@ -89,7 +87,6 @@ async function updateUser(req, res) {
   try {
     const validation = validateUserInput(req.body, { partial: true });
     if (validation.error) return res.status(400).json({ error: validation.error });
-
     const fields = validation.value;
     const updates = [];
     const values = [];

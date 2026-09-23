@@ -86,7 +86,6 @@
     "price": 650,
     "image": "images/red chicken.png",
     "category": "Chicken Gravy"
-
   },
   {
     "id": 12,
@@ -97,7 +96,7 @@
     "category": "Biryani"
   },
   {
-    "id": 12,
+    "id": 15,
     "name": "Hydrebadi Biryani Pack",
     "description": "Biryani creamy delight with aromatic spice.",
     "price": 650,
@@ -105,7 +104,7 @@
     "category": "Biryani"
   },
   {
-    "id": 12,
+    "id": 14,
     "name": "Moradbadi Biryani Pack",
     "description": "Biryani creamy delight with aromatic spice.",
     "price": 500,
@@ -120,5 +119,4 @@
     "image": "images/royal biryani.png",
     "category": "Biryani"
   }
-  
 ]

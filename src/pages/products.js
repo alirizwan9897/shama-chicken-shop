@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
+import axios from "axios";
 import Link from "next/link";
 const CART_STORAGE_KEY = "crispy-chicken-cart";
 const CATEGORY_FILTERS = {
@@ -40,12 +41,18 @@ export default function Home() {
       setCart(JSON.parse(stored));
     }
     setIsLoaded(true);
-    fetch("/data/products.json")
-      .then((res) => res.json())
-      .then((data) => setProducts(data))
-      .catch((error) => {
+  }, []);
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/api/products");
+        setProducts(response.data);
+      } catch (error) {
         console.error("Failed to load products:", error);
-      });
+      }
+    };
+
+    loadProducts();
   }, []);
   useEffect(() => {
     if (!isLoaded || typeof window === "undefined") return;

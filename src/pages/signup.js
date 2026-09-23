@@ -17,7 +17,7 @@ export default function Signup() {
     e.preventDefault();
     console.log("Complete form Data", formData)
     try {
-      const response = await axios.post("https://shama-chicken-shop.vercel.app/api/users/signup", formData);
+      const response = await axios.post("http://localhost:4000/api/users/signup", formData);
       console.log('user created ', response.data)
       router.push("/signin");
     }
@@ -29,7 +29,6 @@ export default function Signup() {
     <div className="auth-container">
       <form className="auth-form" onSubmit={handleSubmit}>
         <h1>Create Account</h1>
-
         <input type="text"
           name="name"
           placeholder="Full Name"
@@ -54,9 +53,7 @@ export default function Signup() {
           value={formData.password}
           onChange={handleChange}
           minLength={8}
-
         />
-
         <button type="submit">Sign Up</button>
       </form>
     </div>

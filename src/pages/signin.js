@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 export default function Signin() {
+  const { login } = useAuth();
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
@@ -25,9 +27,15 @@ export default function Signin() {
         }
       );
       console.log('Login successful:', response.data);
+      alert("Login Successfull:", response.data)
+      // Get user from either response.data.user or response.data
+      const userData = response.data.user || response.data;
+      console.log('User data:', userData);
+      login(userData);//update context
+      // Save logged-in user
       localStorage.setItem(
         'shama-chicken-shop-auth',
-        JSON.stringify(response.data.user)
+        JSON.stringify(userData)
       );
       router.push('/');
     } catch (error) {

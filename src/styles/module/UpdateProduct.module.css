@@ -1,0 +1,169 @@
+.container {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* H1 at top */
+.title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+/* Search area */
+.searchBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.searchInput {
+    width: 300px;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    outline: none;
+}
+
+.searchInput:focus {
+    border-color: #0070f3;
+}
+
+.searchButton {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    background: #0070f3;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.searchButton:hover {
+    background: #005ac1;
+}
+
+.searchButton:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
+/* Message */
+.message {
+    text-align: center;
+    margin: 15px 0;
+    font-weight: 500;
+}
+
+/* Product form */
+.form {
+    max-width: 650px;
+    margin: 30px auto 0;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+}
+
+.formGroup label {
+    margin-bottom: 7px;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.formGroup input,
+.formGroup textarea {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus {
+    border-color: #0070f3;
+}
+
+.formGroup textarea {
+    resize: vertical;
+}
+
+/* Image preview */
+.preview {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.preview p {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.preview img {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+/* Update button */
+.updateButton {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 6px;
+    background: #28a745;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.updateButton:hover {
+    background: #218838;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .container {
+        padding: 25px 15px;
+    }
+
+    .title {
+        font-size: 26px;
+    }
+
+    .searchBox {
+        flex-direction: column;
+    }
+
+    .searchInput {
+        width: 100%;
+    }
+
+    .searchButton {
+        width: 100%;
+    }
+
+    .form {
+        padding: 20px;
+    }
+}
