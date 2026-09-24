@@ -40,6 +40,10 @@ The API requires PostgreSQL. For local development, configure `PGHOST`, `PGUSER`
 add `DATABASE_URL` in the project's Environment Variables and redeploy. The
 database must be hosted externally; `localhost` is not available inside Vercel.
 
+Product image uploads also require these Vercel Environment Variables:
+`CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET`.
+Redeploy after adding or changing them.
+
 Create a user by sending JSON with `name`, `email`, and `password`. The optional `role` defaults to `user`.
 
 You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
