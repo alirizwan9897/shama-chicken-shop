@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "../styles/module/UpdateProduct.module.css";
-const API_URL = "http://localhost:4000";
+const API_URL = "https://shama-chicken-shop.vercel.app";
 export default function UpdateProduct() {
     const [productId, setProductId] = useState("");
     const [product, setProduct] = useState(null);

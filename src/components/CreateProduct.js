@@ -39,7 +39,7 @@ export default function CreateProduct() {
                 image: formData.image.name,
             });
             const response = await axios.post(
-                "http://localhost:4000/api/products/create",
+                "https://shama-chicken-shop.vercel.app/api/products/create",
                 data
             );
             console.log("Product created:", response.data);

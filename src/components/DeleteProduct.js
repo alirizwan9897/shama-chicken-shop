@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "../styles/module/DeleteProduct.module.css";
-const API_URL = "http://localhost:4000";
+const API_URL = "https://shama-chicken-shop.vercel.app/";
 export default function DeleteProduct() {
     const [productId, setProductId] = useState("");
     const [productData, setProduct] = useState(null);
@@ -22,11 +22,21 @@ export default function DeleteProduct() {
             );
             const data = await response.json();
             console.log("Product response:", data);
-            if (!response.ok) {
-                throw new Error(
-                    data.error || data.message || "Product not found"
-                );
+            // Product does not exist / was already deleted
+            if (response.status === 404) {
+                setProduct(null);
+                setMessage("Product not found. It may have already been deleted.");
+                return;
             }
+            // Other API errors
+            if (!response.ok) {
+                setProduct(null);
+                setMessage(
+                    data.error || data.message || "Failed to find product"
+                );
+                return;
+            }
+
             setProduct(data);
             setMessage("Product found successfully!");
         } catch (error) {

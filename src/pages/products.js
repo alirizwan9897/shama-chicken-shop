@@ -51,7 +51,6 @@ export default function Home() {
         console.error("Failed to load products:", error);
       }
     };
-
     loadProducts();
   }, []);
   useEffect(() => {
