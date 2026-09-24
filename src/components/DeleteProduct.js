@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "../styles/module/DeleteProduct.module.css";
-const API_URL = "https://shama-chicken-shop.vercel.app/";
+const API_URL = "https://shama-chicken-shop.vercel.app";
 export default function DeleteProduct() {
     const [productId, setProductId] = useState("");
     const [productData, setProduct] = useState(null);
