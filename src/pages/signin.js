@@ -20,7 +20,7 @@ export default function Signin() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        'http://localhost:4000/api/users/login',
+        'https://shama-chicken-shop.vercel.app',
         {
           email: formData.email,
           password: formData.password
