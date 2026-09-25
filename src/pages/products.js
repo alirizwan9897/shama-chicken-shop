@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import Link from "next/link";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://shama-chicken-shop.vercel.app";
 const CART_STORAGE_KEY = "crispy-chicken-cart";
 const CATEGORY_FILTERS = {
   All: null,
@@ -45,7 +47,7 @@ export default function Home() {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const response = await axios.get("http://shama-chicken-shop.vercel.app/api/products");
+        const response = await axios.get(`${API_URL}/api/products`);
         setProducts(response.data);
       } catch (error) {
         console.error("Failed to load products:", error);
