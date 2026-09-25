@@ -45,7 +45,7 @@ export default function Home() {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/api/products");
+        const response = await axios.get("http://shama-chicken-shop.vercel.app/api/products");
         setProducts(response.data);
       } catch (error) {
         console.error("Failed to load products:", error);
