@@ -11,6 +11,7 @@
     "deploy": "next build && next export && gh-pages -d out"
   },
   "dependencies": {
+    "@react-google-maps/api": "^2.20.8",
     "axios": "^1.20.0",
     "cloudinary": "^2.11.0",
     "cors": "^2.8.6",

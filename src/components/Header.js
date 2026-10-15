@@ -14,38 +14,65 @@ export default function Header() {
   const [showForm, setShowForm] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-  // Search
+  // =========================
+  // SEARCH
+  // =========================
   const handleSearch = (e) => {
     e.preventDefault();
-    if (searchInput.trim()) {
+    const search = searchInput.trim();
+    if (search) {
       router.push(
-        `/products?search=${encodeURIComponent(searchInput)}`
+        `/products?search=${encodeURIComponent(search)}`
       );
     } else {
       router.push("/products");
     }
   };
-  // Clear search
+  // =========================
+  // CLEAR SEARCH
+  // =========================
   const handleClear = () => {
     setSearchInput("");
     router.push("/products");
   };
-  // Create
+  // =========================
+  // CREATE PRODUCT
+  // =========================
   const handleCreateProduct = () => {
     setProfileOpen(false);
     setShowForm(true);
   };
-  // Update
+  // =========================
+  // UPDATE PRODUCT
+  // =========================
   const handleUpdateProduct = () => {
     setProfileOpen(false);
     setShowUpdate(true);
   };
-  // Delete
+  // =========================
+  // DELETE PRODUCT
+  // =========================
   const handleDeleteProduct = () => {
     setProfileOpen(false);
     setShowDelete(true);
   };
-  // Logout
+  // =========================
+  // SHOW ORDERS
+  // =========================
+  const handleShowOrders = () => {
+    setProfileOpen(false);
+    router.push("/ShowOrder");
+  };
+  // =========================
+  // MY ORDERS
+  // =========================
+  const handleMyOrders = () => {
+    setProfileOpen(false);
+    router.push("/MyOrders");
+  };
+  // =========================
+  // LOGOUT
+  // =========================
   const handleLogout = () => {
     logout();
     setProfileOpen(false);
@@ -53,8 +80,13 @@ export default function Header() {
   };
   return (
     <>
-      <header className="navbar">
-        {/* LEFT */}
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
+      <header
+        className={`navbar ${router.pathname === "/products" ? "navbar-storefront" : ""}`}
+      >
+        {/* ================= LEFT ================= */}
         <div className="navbar-left">
           <button
             className="mobile-menu-btn"
@@ -68,13 +100,13 @@ export default function Header() {
             🍗 SHAMA CHICKEN SHOP
           </div>
         </div>
-        {/* SEARCH */}
+        {/* ================= SEARCH ================= */}
         <form
           onSubmit={handleSearch}
           style={{
             display: "flex",
             gap: "8px",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <input
@@ -93,7 +125,7 @@ export default function Header() {
               border: "none",
               borderRadius: "6px",
               cursor: "pointer",
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Search
@@ -108,17 +140,21 @@ export default function Header() {
               border: "none",
               borderRadius: "6px",
               cursor: "pointer",
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             Clear
           </button>
         </form>
-        {/* RIGHT */}
+        {/* ================= RIGHT ================= */}
         <div className="nav-icons">
           {user ? (
-            <div style={{ position: "relative" }}>
-              {/* PROFILE BUTTON */}
+            <div
+              style={{
+                position: "relative",
+              }}
+            >
+              {/* ================= PROFILE BUTTON ================= */}
               <button
                 onClick={() =>
                   setProfileOpen((prev) => !prev)
@@ -133,90 +169,90 @@ export default function Header() {
                   fontWeight: 600,
                   display: "flex",
                   alignItems: "center",
-                  gap: "6px"
+                  gap: "6px",
                 }}
               >
                 <span>
                   {user.name || "Profile"}
                 </span>
                 <span>
-                  ▾
+                  {profileOpen ? "▴" : "▾"}
                 </span>
               </button>
-              {/* PROFILE DROPDOWN */}
+              {/* =====================================================
+                  PROFILE DROPDOWN
+              ===================================================== */}
               {profileOpen && (
-                <div
-                  style={{
-                    position: "absolute",
-                    right: 0,
-                    top: "calc(100% + 8px)",
-                    background: "white",
-                    border: "1px solid #d1d5db",
-                    borderRadius: "10px",
-                    boxShadow:
-                      "0 4px 12px rgba(0,0,0,0.12)",
-                    padding: "10px",
-                    minWidth: "220px",
-                    zIndex: 2000
-                  }}
-                >
-                  {/* USER INFORMATION */}
-                  <div
-                    style={{
-                      padding: "8px",
-                      borderBottom:
-                        "1px solid #e5e7eb",
-                      marginBottom: "8px"
-                    }}
-                  >
-                    <div
+                <div className="profileDropdown">
+                  {/* ================= USER INFO ================= */}
+                  <div className="profileInfo">
+                    <strong>
+                      {user?.name || "User"}
+                    </strong>
+                    <span>
+                      {user?.email || ""}
+                    </span>
+                    <small
                       style={{
-                        fontWeight: 700,
-                        color: "#111827"
+                        display: "block",
+                        marginTop: "5px",
+                        color: "#6b7280",
+                        textTransform: "capitalize",
                       }}
                     >
-                      {user.name}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: "13px",
-                        color: "#6b7280"
-                      }}
-                    >
-                      {user.email}
-                    </div>
+                      Role: {user?.role || "user"}
+                    </small>
                   </div>
-                  {/* CREATE */}
+                  <div className="divider"></div>
+                  {/* =================================================
+                      ADMIN MENU
+                  ================================================= */}
+                  {user?.role === "admin" ? (
+                    <>
+                      {/* SHOW ORDERS */}
+                      <button
+                        className="order-btn"
+                        onClick={handleShowOrders}
+                      >
+                        Show Orders
+                      </button>
+                      {/* CREATE PRODUCT */}
+                      <button
+                        className="create-btn"
+                        onClick={handleCreateProduct}
+                      >
+                        Create Product
+                      </button>
+                      {/* UPDATE PRODUCT */}
+                      <button
+                        className="update-btn"
+                        onClick={handleUpdateProduct}
+                      >
+                        Update Product
+                      </button>
+                      {/* DELETE PRODUCT */}
+                      <button
+                        className="delete-btn"
+                        onClick={handleDeleteProduct}
+                      >
+                        Delete Product
+                      </button>
+                    </>
+                  ) : (
+                    /* =================================================
+                       NORMAL USER MENU
+                    ================================================= */
+                    <button
+                      className="order-btn"
+                      onClick={handleMyOrders}
+                    >
+                      My Orders
+                    </button>
+                  )}
+                  {/* ================= LOGOUT ================= */}
                   <button
-                    onClick={handleCreateProduct}
-                    style={menuButtonStyle}
-                  >
-                    Create Product
-                  </button>
-                  {/* UPDATE */}
-                  <button
-                    onClick={handleUpdateProduct}
-                    style={menuButtonStyle}
-                  >
-                    Update Product
-                  </button>
-                  {/* DELETE */}
-                  <button
-                    onClick={handleDeleteProduct}
-                    style={{
-                      ...menuButtonStyle,
-                      background: "#ef4444"
-                    }}
-                  >
-                    Delete Product
-                  </button>
-                  {/* LOGOUT */}
-                  <button
+                    className="logout-btn"
                     onClick={handleLogout}
-                    style={{
-                      ...menuButtonStyle,
-                      background: "#111827"
-                    }}
                   >
                     Logout
                   </button>
@@ -225,23 +261,29 @@ export default function Header() {
             </div>
           ) : (
             <>
+              {/* ================= SIGN IN ================= */}
               <Link href="/signin">
                 Sign in
               </Link>
+              {/* ================= SIGN UP ================= */}
               <Link href="/signup">
                 Sign up
               </Link>
             </>
           )}
+          {/* ================= ENQUIRY ================= */}
           <Link href="/enquiry">
             Enquiry
           </Link>
+          {/* ================= CART ================= */}
           <Link href="/cart">
             Cart
           </Link>
         </div>
       </header>
-      {/* MENU */}
+      {/* =====================================================
+          MOBILE / MAIN MENU
+      ===================================================== */}
       <div
         className={`menu ${menuOpen ? "open" : ""
           }`}
@@ -283,13 +325,18 @@ export default function Header() {
           About Us
         </Link>
       </div>
+      {/* =====================================================
+          MENU OVERLAY
+      ===================================================== */}
       {menuOpen && (
         <div
           className="menu-overlay"
           onClick={() => setMenuOpen(false)}
         />
       )}
-      {/* CREATE PRODUCT MODAL */}
+      {/* =====================================================
+          CREATE PRODUCT MODAL
+      ===================================================== */}
       {showForm && (
         <div style={overlayStyle}>
           <div style={modalStyle}>
@@ -303,7 +350,9 @@ export default function Header() {
           </div>
         </div>
       )}
-      {/* UPDATE PRODUCT MODAL */}
+      {/* =====================================================
+          UPDATE PRODUCT MODAL
+      ===================================================== */}
       {showUpdate && (
         <div style={overlayStyle}>
           <div style={modalStyle}>
@@ -317,7 +366,9 @@ export default function Header() {
           </div>
         </div>
       )}
-      {/* DELETE PRODUCT MODAL */}
+      {/* =====================================================
+          DELETE PRODUCT MODAL
+      ===================================================== */}
       {showDelete && (
         <div style={overlayStyle}>
           <div style={modalStyle}>
@@ -334,19 +385,9 @@ export default function Header() {
     </>
   );
 }
-/* PROFILE MENU BUTTON */
-const menuButtonStyle = {
-  width: "100%",
-  padding: "9px 10px",
-  background: "#16a34a",
-  color: "white",
-  border: "none",
-  borderRadius: "6px",
-  cursor: "pointer",
-  marginBottom: "8px",
-  fontWeight: "600"
-};
-/* MODAL OVERLAY */
+/* =========================================================
+   MODAL OVERLAY
+========================================================= */
 const overlayStyle = {
   position: "fixed",
   top: 0,
@@ -359,9 +400,11 @@ const overlayStyle = {
   alignItems: "flex-start",
   zIndex: 3000,
   paddingTop: "50px",
-  overflowY: "auto"
+  overflowY: "auto",
 };
-/* MODAL */
+/* =========================================================
+   MODAL
+========================================================= */
 const modalStyle = {
   backgroundColor: "#fff",
   padding: "20px",
@@ -369,9 +412,11 @@ const modalStyle = {
   width: "90%",
   maxWidth: "600px",
   position: "relative",
-  marginBottom: "50px"
+  marginBottom: "50px",
 };
-/* CLOSE BUTTON */
+/* =========================================================
+   CLOSE BUTTON
+========================================================= */
 const closeButtonStyle = {
   position: "absolute",
   top: "10px",
@@ -380,5 +425,5 @@ const closeButtonStyle = {
   background: "transparent",
   fontSize: "18px",
   cursor: "pointer",
-  zIndex: 10
+  zIndex: 10,
 };

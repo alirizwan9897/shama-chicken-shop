@@ -1,6 +1,8 @@
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
+import { getApiBaseUrl } from "../lib/apiUrl";
 import styles from "../styles/module/UpdateProduct.module.css";
-const API_URL = "https://shama-chicken-shop.vercel.app";
+
 export default function UpdateProduct() {
     const [productId, setProductId] = useState("");
     const [product, setProduct] = useState(null);
@@ -8,88 +10,137 @@ export default function UpdateProduct() {
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const [updating, setUpdating] = useState(false);
-    // SEARCH PRODUCT BY ID
+
+    const API_URL = getApiBaseUrl();
+
+    // Search product by ID
     const searchProduct = async () => {
-        if (!productId) {
-            setMessage("Please enter Product ID");
+        if (!productId.trim() || !/^\d+$/.test(productId) ||
+            Number(productId) <= 0) {
+            setMessage("Please enter a valid Product ID");
             return;
         }
+
         setLoading(true);
         setMessage("");
         setProduct(null);
         setNewImage(null);
+
+        const fileInput = document.getElementById("product-image");
+        if (fileInput) fileInput.value = "";
+
         try {
             const response = await fetch(
                 `${API_URL}/api/products/${productId}`
             );
+
             const data = await response.json();
+
             if (!response.ok) {
-                throw new Error(data.error || data.message || "Product not found");
+                throw new Error(
+                    data.error || data.message || "Product not found"
+                );
             }
-            console.log("Product found:", data);
-            setProduct(data);
+
+            // Support APIs returning either the product or { product: ... }
+            const foundProduct = data.product || data;
+
+            setProduct({
+                ...foundProduct,
+                price: foundProduct.price ?? "",
+                original_price: foundProduct.original_price ?? "",
+            });
+
             setMessage("Product found successfully!");
         } catch (error) {
             console.error("Search product error:", error);
-            setProduct(null);
-            setMessage(error.message || "Product not found");
+            setMessage(error.message || "Failed to find product");
         } finally {
             setLoading(false);
         }
     };
-    // HANDLE TEXT INPUT
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setProduct((prev) => ({
-            ...prev,
+
+    // Handle text and price inputs
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+
+        setProduct((previous) => ({
+            ...previous,
             [name]: value,
         }));
     };
-    // HANDLE NEW IMAGE
-    const handleImageChange = (e) => {
-        const file = e.target.files?.[0];
-        if (!file) {
+
+    // Validate and select a replacement image
+    const handleImageChange = (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+            setMessage("Choose a JPG, PNG or WebP image");
+            event.target.value = "";
             return;
         }
-        // Check image type
-        if (!file.type.startsWith("image/")) {
-            setMessage("Please select a valid image file");
-            return;
-        }
-        // 5 MB limit
+
         if (file.size > 5 * 1024 * 1024) {
             setMessage("Image size must be less than 5 MB");
+            event.target.value = "";
             return;
         }
+
         setNewImage(file);
         setMessage("New image selected");
     };
-    // UPDATE PRODUCT
-    const updateProductData = async (e) => {
-        e.preventDefault();
-        if (!product) {
+
+    // Update product
+    const updateProductData = async (event) => {
+        event.preventDefault();
+
+        if (!product) return;
+
+        const price = Number(product.price);
+        const originalPrice =
+            product.original_price === "" ||
+                product.original_price === null
+                ? null
+                : Number(product.original_price);
+
+        if (!Number.isFinite(price) || price < 0) {
+            setMessage("Enter a valid selling price");
             return;
         }
+
+        if (
+            originalPrice !== null &&
+            (!Number.isFinite(originalPrice) || originalPrice < 0)
+        ) {
+            setMessage("Enter a valid original price or leave it empty");
+            return;
+        }
+
+        if (originalPrice !== null && originalPrice < price) {
+            setMessage("Original price should be greater than or equal to selling price");
+            return;
+        }
+
         setUpdating(true);
         setMessage("");
+
         try {
             const formData = new FormData();
-            formData.append("name", product.name);
-            formData.append("description", product.description);
-            formData.append("price", Number(product.price));
+
+            formData.append("name", product.name.trim());
+            formData.append("description", product.description.trim());
+            formData.append("price", String(price));
+            formData.append(
+                "original_price",
+                originalPrice === null ? "" : String(originalPrice)
+            );
             formData.append("category", product.category);
-            // Only send image if user selected a new image
+
             if (newImage) {
                 formData.append("image", newImage);
             }
-            console.log("Updating product:", {
-                id: product.id,
-                name: product.name,
-                description: product.description,
-                price: product.price,
-                category: product.category,
-                newImage: newImage ? newImage.name : "Old image",
-            });
+
             const response = await fetch(
                 `${API_URL}/api/products/${product.id}`,
                 {
@@ -97,48 +148,69 @@ export default function UpdateProduct() {
                     body: formData,
                 }
             );
+
             const data = await response.json();
-            console.log("Update response:", data);
+
             if (!response.ok) {
                 throw new Error(
                     data.error || data.message || "Failed to update product"
                 );
             }
-            setProduct(data.product);
+
+            const updatedProduct = data.product || data;
+
+            setProduct({
+                ...updatedProduct,
+                price: updatedProduct.price ?? "",
+                original_price: updatedProduct.original_price ?? "",
+            });
+
             setNewImage(null);
-            setMessage("Product updated successfully!");
-            // Clear file input
+
             const fileInput = document.getElementById("product-image");
-            if (fileInput) {
-                fileInput.value = "";
-            }
+            if (fileInput) fileInput.value = "";
+
+            setMessage("Product updated successfully!");
         } catch (error) {
             console.error("Update product error:", error);
-            setMessage(
-                error.message || "Failed to update product"
-            );
+            console.error("Backend response:", error.message);
+            setMessage(error.message || "Failed to update product");
         } finally {
             setUpdating(false);
         }
     };
+
+    // Clean up image preview URL
+    const [previewUrl, setPreviewUrl] = useState("");
+
+    useEffect(() => {
+        if (!newImage) {
+            setPreviewUrl("");
+            return;
+        }
+
+        const url = URL.createObjectURL(newImage);
+        setPreviewUrl(url);
+
+        return () => URL.revokeObjectURL(url);
+    }, [newImage]);
+
     return (
         <div className={styles.container}>
-            {/* Heading */}
-            <h1 className={styles.title}>
-                Update Product
-            </h1>
-            {/* =========================
-          SEARCH SECTION
-      ========================= */}
+            <h1 className={styles.title}>Update Product</h1>
+
             <div className={styles.searchBox}>
                 <input
                     type="number"
+                    min="1"
                     placeholder="Enter Product ID"
                     value={productId}
-                    onChange={(e) => setProductId(e.target.value)}
+                    onChange={(event) => setProductId(event.target.value)}
                     className={styles.searchInput}
                 />
+
                 <button
+                    type="button"
                     onClick={searchProduct}
                     className={styles.searchButton}
                     disabled={loading}
@@ -146,32 +218,24 @@ export default function UpdateProduct() {
                     {loading ? "Searching..." : "Search"}
                 </button>
             </div>
-            {/* Message */}
+
             {message && (
-                <p className={styles.message}>
+                <p className={styles.message} role="status">
                     {message}
                 </p>
             )}
-            {/* =========================
-          PRODUCT DETAILS
-      ========================= */}
+
             {product && (
-                <form
-                    onSubmit={updateProductData}
-                    className={styles.form}
-                >
-                    {/* Product ID */}
+                <form onSubmit={updateProductData} className={styles.form}>
                     <div className={styles.formGroup}>
-                        <label>Product ID</label>
-                        <input
-                            value={product.id}
-                            disabled
-                        />
+                        <label htmlFor="update-product-id">Product ID</label>
+                        <input id="update-product-id" value={product.id} disabled />
                     </div>
-                    {/* Product Name */}
+
                     <div className={styles.formGroup}>
-                        <label>Product Name</label>
+                        <label htmlFor="update-product-name">Product Name</label>
                         <input
+                            id="update-product-name"
                             type="text"
                             name="name"
                             value={product.name || ""}
@@ -179,130 +243,114 @@ export default function UpdateProduct() {
                             required
                         />
                     </div>
-                    {/* Description */}
+
                     <div className={styles.formGroup}>
-                        <label>Description</label>
+                        <label htmlFor="update-product-description">Description</label>
                         <textarea
+                            id="update-product-description"
                             name="description"
                             value={product.description || ""}
                             onChange={handleChange}
-                            rows="4"
+                            rows={4}
                             required
                         />
                     </div>
-                    {/* Price */}
+
                     <div className={styles.formGroup}>
-                        <label>Price</label>
+                        <label htmlFor="update-product-price">Selling Price (₹)</label>
                         <input
+                            id="update-product-price"
                             type="number"
                             name="price"
-                            value={product.price || ""}
+                            value={product.price}
                             onChange={handleChange}
                             min="0"
+                            step="0.01"
                             required
                         />
                     </div>
-                    {/* Current Image */}
+
                     <div className={styles.formGroup}>
-                        <label>Current Image</label>
-                        <img
-                            src={product.image}
-                            alt={product.name}
-                            style={{
-                                width: "200px",
-                                height: "150px",
-                                objectFit: "cover",
-                                borderRadius: "8px",
-                                marginTop: "10px",
-                            }}
-                        />
-                    </div>
-                    {/* New Image */}
-                    <div className={styles.formGroup}>
-                        <label>
-                            Change Product Image
+                        <label htmlFor="update-original-price">
+                            Original Price (₹)
                         </label>
+                        <input
+                            id="update-original-price"
+                            type="number"
+                            name="original_price"
+                            value={product.original_price}
+                            onChange={handleChange}
+                            min="0"
+                            step="0.01"
+                            placeholder="Leave empty for no discount"
+                        />
+                        <small>
+                            Original price should be equal to or higher than selling price.
+                        </small>
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label>Current Product Image</label>
+                        {product.image ? (
+                            <img
+                                src={product.image}
+                                alt={product.name || "Current product"}
+                                className={styles.productImage}
+                            />
+                        ) : (
+                            <p>No current image available.</p>
+                        )}
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label htmlFor="product-image">Change Product Image</label>
                         <input
                             id="product-image"
                             type="file"
                             accept="image/png,image/jpeg,image/webp"
                             onChange={handleImageChange}
                         />
-                        {newImage && (
-                            <p>
-                                Selected: {newImage.name}
-                            </p>
+
+                        {newImage && <p>Selected: {newImage.name}</p>}
+
+                        {previewUrl && (
+                            <img
+                                src={previewUrl}
+                                alt="New product preview"
+                                className={styles.productImage}
+                            />
                         )}
                     </div>
-                    {/* Category */}
+
                     <div className={styles.formGroup}>
-                        <label>Category</label>
+                        <label htmlFor="update-product-category">Category</label>
                         <select
+                            id="update-product-category"
                             name="category"
                             value={product.category || ""}
                             onChange={handleChange}
                             required
                         >
-                            <option value="">
-                                Select Category
-                            </option>
-                            <option value="Grilled">
-                                Grilled
-                            </option>
-                            <option value="Fried">
-                                Fried
-                            </option>
-                            <option value="Tandoori">
-                                Tandoori
-                            </option>
-                            <option value="Curry">
-                                Curry
-                            </option>
-                            <option value="BBQ">
-                                BBQ
-                            </option>
-                            <option value="Specialty">
-                                Specialty
-                            </option>
-                            <option value="Combo">
-                                Combo
-                            </option>
-                            <option value="Biryani">
-                                Biryani
-                            </option>
-                            <option value="Veg">
-                                Veg
-                            </option>
-                            <option value="Chicken Gravy">
-                                Chicken Gravy
-                            </option>
+                            <option value="">Select Category</option>
+                            <option value="Grilled">Grilled</option>
+                            <option value="Fried">Fried</option>
+                            <option value="Tandoori">Tandoori</option>
+                            <option value="Curry">Curry</option>
+                            <option value="BBQ">BBQ</option>
+                            <option value="Specialty">Specialty</option>
+                            <option value="Combo">Combo</option>
+                            <option value="Biryani">Biryani</option>
+                            <option value="Veg">Veg</option>
+                            <option value="Chicken Gravy">Chicken Gravy</option>
                         </select>
                     </div>
-                    {/* New Image Preview */}
-                    {newImage && (
-                        <div className={styles.preview}>
-                            <p>New Image Preview</p>
-                            <img
-                                src={URL.createObjectURL(newImage)}
-                                alt="New product"
-                                style={{
-                                    width: "200px",
-                                    height: "150px",
-                                    objectFit: "cover",
-                                    borderRadius: "8px",
-                                }}
-                            />
-                        </div>
-                    )}
-                    {/* Update Button */}
+
                     <button
                         type="submit"
                         className={styles.updateButton}
                         disabled={updating}
                     >
-                        {updating
-                            ? "Updating..."
-                            : "Update Product"}
+                        {updating ? "Updating..." : "Update Product"}
                     </button>
                 </form>
             )}

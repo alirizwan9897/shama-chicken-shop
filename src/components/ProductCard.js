@@ -1,34 +1,65 @@
-import Image from 'next/image';
-import styles from './product.module.css';
+
+import Image from "next/image";
+import styles from "./product.module.css";
+
 export default function ProductCard({ product }) {
+  const price = Number(product?.price || 0);
+
+  const originalPrice = Number(
+    product?.original_price ?? product?.originalPrice ?? 0
+  );
+
+  const hasDiscount =
+    originalPrice > price && price >= 0;
+
+  const discount = hasDiscount
+    ? Math.round(((originalPrice - price) / originalPrice) * 100)
+    : 0;
+
   return (
-    <div
-      className={styles.productCard}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow =
-          "0 12px 25px rgba(212, 100, 43, 0.25)";
-        e.currentTarget.style.transform = "translateY(-8px)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow =
-          "0 4px 15px rgba(212, 100, 43, 0.15)";
-        e.currentTarget.style.transform = "translateY(0)";
-      }}
-    >
+    <article className={styles.productCard}>
       <div className={styles.imageContainer}>
         <Image
           src={product.image}
-          alt={product.name}
+          alt={product.name || "Chicken dish"}
           fill
+          sizes="(max-width: 850px) 50vw, (max-width: 1200px) 33vw, 25vw"
           style={{ objectFit: "cover" }}
-          quality={85}
+          quality={75}
         />
+
+        {hasDiscount && (
+          <span className={styles.discountBadge}>
+            {discount}% OFF
+          </span>
+        )}
       </div>
+
       <div className={styles.content}>
-        <h3>{product.name}</h3>
-        <p>{product.description}</p>
-        <strong>₹{product.price}</strong>
+        {product.category && (
+          <span className={styles.category}>{product.category}</span>
+        )}
+
+        <h3 className={styles.productName}>
+          {product.name}
+        </h3>
+
+        <p className={styles.description}>
+          {product.description}
+        </p>
+
+        <div className={styles.priceBox}>
+          <strong className={styles.price}>
+            ₹{price.toFixed(2)}
+          </strong>
+
+          {hasDiscount && (
+            <span className={styles.originalPrice}>
+              ₹{originalPrice.toFixed(2)}
+            </span>
+          )}
+        </div>
       </div>
-    </div>
+    </article>
   );
 }

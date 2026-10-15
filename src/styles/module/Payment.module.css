@@ -1,0 +1,165 @@
+.paymentContainer {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 30px;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Product & Address cards */
+
+.card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.card h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.productName {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.price {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Address */
+
+.address {
+    line-height: 1.6;
+    color: #444;
+}
+
+.address p {
+    margin: 5px 0;
+}
+
+/* Payment */
+
+.paymentCard {
+    grid-column: 1 / -1;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.paymentOption {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+
+.paymentOption:hover {
+    border-color: #999;
+}
+
+.paymentOption input {
+    width: 18px;
+    height: 18px;
+}
+
+.paymentText {
+    font-size: 16px;
+}
+
+/* Total */
+
+.totalBox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+    padding-top: 20px;
+}
+
+.totalLabel {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.totalAmount {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Place Order */
+
+.placeOrderButton {
+    width: 100%;
+    margin-top: 20px;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.placeOrderButton:hover {
+    opacity: 0.9;
+}
+
+.placeOrderButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Mobile */
+
+@media (max-width: 700px) {
+    .paymentContainer {
+        padding: 12px;
+        margin: 15px auto;
+    }
+
+    .title {
+        font-size: 25px;
+        margin-bottom: 20px;
+    }
+
+    .content {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .paymentCard {
+        grid-column: auto;
+    }
+
+    .card,
+    .paymentCard {
+        padding: 15px;
+    }
+
+    .totalAmount {
+        font-size: 21px;
+    }
+}

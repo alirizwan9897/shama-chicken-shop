@@ -1,0 +1,185 @@
+.deliveryContainer {
+    --delivery-accent: #b6422e;
+    --delivery-ink: #25312d;
+    --delivery-muted: #68736f;
+    --delivery-line: #d9dfdb;
+
+    width: min(100% - 32px, 880px);
+    margin: 36px auto;
+    padding: 30px;
+    color: var(--delivery-ink);
+    background: #fff;
+    border: 1px solid #e4e8e5;
+    border-radius: 10px;
+    box-shadow: 0 14px 40px rgb(37 49 45 / 8%);
+}
+
+.title {
+    margin: 0 0 22px;
+    font-size: 27px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.locationButton,
+.confirmButton {
+    min-height: 48px;
+    padding: 12px 18px;
+    border: 0;
+    border-radius: 6px;
+    font: inherit;
+    font-weight: 650;
+    cursor: pointer;
+    transition: background-color 150ms ease, transform 150ms ease;
+}
+
+.locationButton {
+    margin-bottom: 16px;
+    color: #fff;
+    background: var(--delivery-accent);
+}
+
+.locationButton:hover:not(:disabled) {
+    background: #963522;
+}
+
+.locationButton:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+.confirmButton {
+    width: 100%;
+    color: #fff;
+    background: #29483d;
+}
+
+.confirmButton:hover {
+    background: #1f392f;
+}
+
+.locationButton:active:not(:disabled),
+.confirmButton:active {
+    transform: translateY(1px);
+}
+
+.locationButton:focus-visible,
+.confirmButton:focus-visible,
+.input:focus-visible {
+    outline: 3px solid rgb(182 66 46 / 28%);
+    outline-offset: 2px;
+}
+
+.message,
+.mapHelp {
+    margin: 0 0 16px;
+    padding: 11px 13px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.message {
+    color: #7d3527;
+    background: #fff1ed;
+    border: 1px solid #f0d0c7;
+}
+
+.mapHelp {
+    color: var(--delivery-muted);
+    background: #f4f7f5;
+    border: 1px solid #e1e8e3;
+}
+
+.mapContainer {
+    width: 100%;
+    height: 350px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    border: 1px solid var(--delivery-line);
+    border-radius: 7px;
+}
+
+.deliveryForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 18px;
+}
+
+.fieldGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.field {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.fieldLabel {
+    color: #35413c;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.input {
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 12px;
+    color: var(--delivery-ink);
+    background: #fff;
+    border: 1px solid var(--delivery-line);
+    border-radius: 6px;
+    font: inherit;
+    box-sizing: border-box;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.input:focus {
+    border-color: var(--delivery-accent);
+    box-shadow: 0 0 0 3px rgb(182 66 46 / 10%);
+}
+
+.coordinates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    padding: 12px 14px;
+    color: var(--delivery-muted);
+    background: #f4f7f5;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.coordinates p {
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .deliveryContainer {
+        width: min(100% - 24px, 880px);
+        margin: 20px auto;
+        padding: 20px 16px;
+    }
+
+    .title {
+        font-size: 23px;
+    }
+
+    .fieldGrid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 13px;
+    }
+
+    .locationButton {
+        width: 100%;
+    }
+
+    .mapContainer {
+        height: 290px;
+    }
+}

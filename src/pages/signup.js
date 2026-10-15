@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useRouter } from "next/router";
 import axios from "axios"
+import { getApiBaseUrl } from "../lib/apiUrl";
 export default function Signup() {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -17,12 +18,17 @@ export default function Signup() {
     e.preventDefault();
     console.log("Complete form Data", formData)
     try {
-      const response = await axios.post("https://shama-chicken-shop.vercel.app/api/users/signup", formData);
-      console.log('user created ', response.data)
-      router.push("/signin");
+      const response = await axios.post(
+        `${getApiBaseUrl()}/api/users/signup`, formData
+      );
+      router.push("/signin");;
     }
     catch (error) {
-      console.log('user not created', error)
+      alert(
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Unable to create your account. Please try again."
+      );
     }
   };
   return (

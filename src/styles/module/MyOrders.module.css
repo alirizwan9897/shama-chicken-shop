@@ -1,0 +1,176 @@
+.container {
+    padding: 30px;
+    max-width: 1100px;
+    margin: auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 30px;
+}
+
+.header p {
+    color: #666;
+}
+
+.refreshButton {
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    background: #222;
+    color: white;
+    cursor: pointer;
+}
+
+.ordersList {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.orderCard {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+}
+
+.orderTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.orderTop h3 {
+    margin: 0 0 5px;
+}
+
+.orderTop p {
+    margin: 0;
+    color: #777;
+    font-size: 13px;
+}
+
+.status {
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.confirmed {
+    background: #cfe2ff;
+    color: #084298;
+}
+
+.preparing {
+    background: #ffe5b4;
+    color: #8a4b00;
+}
+
+.out_for_delivery {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.delivered {
+    background: #d4edda;
+    color: #155724;
+}
+
+.cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.orderInfo {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.orderInfo div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.orderInfo strong {
+    font-size: 12px;
+    color: #777;
+}
+
+.orderInfo span {
+    font-weight: 600;
+}
+
+.address {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f7f7f7;
+    border-radius: 7px;
+}
+
+.address p {
+    margin: 7px 0 0;
+    line-height: 1.5;
+}
+
+.empty {
+    text-align: center;
+    padding: 60px 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.shopButton {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    background: #e85d04;
+    color: white;
+    cursor: pointer;
+}
+
+.error {
+    padding: 15px;
+    background: #f8d7da;
+    color: #721c24;
+    border-radius: 6px;
+}
+
+@media (max-width: 700px) {
+    .container {
+        padding: 15px;
+    }
+
+    .header {
+        align-items: flex-start;
+    }
+
+    .orderInfo {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .orderTop {
+        gap: 15px;
+        align-items: flex-start;
+    }
+}

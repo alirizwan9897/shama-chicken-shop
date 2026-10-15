@@ -36,7 +36,6 @@ export default function DeleteProduct() {
                 );
                 return;
             }
-
             setProduct(data);
             setMessage("Product found successfully!");
         } catch (error) {
@@ -109,7 +108,6 @@ export default function DeleteProduct() {
             <h1 className={styles.title}>
                 Delete Product
             </h1>
-
             {/* =========================
           SEARCH
       ========================= */}

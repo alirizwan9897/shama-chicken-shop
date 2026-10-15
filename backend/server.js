@@ -1,10 +1,13 @@
 const express = require("express");
 const cors = require("cors");
+const pool = require("./maindb");
 const usersRouter = require("./api/users");
 const productsRouter = require("./api/products");
+const ordersRouter = require("./api/orders");
 const app = express();
 const allowedOrigins = new Set([
   "http://localhost:3000",
+  "https://shama-chicken-shop-f8vd.vercel.app",
   "https://shama-chicken-shop.vercel.app",
 ]);
 function isAllowedOrigin(origin) {
@@ -25,11 +28,20 @@ app.use(
 );
 app.use("/api/users", usersRouter);
 app.use("/api/products", productsRouter);
+app.use("/api/orders", ordersRouter);
 
 if (require.main === module) {
   const port = Number(process.env.PORT || 4000);
-  app.listen(port, () => {
-    console.log(`API server listening on port ${port}`);
-  });
+  pool.query("SELECT 1")
+    .then(() => {
+      app.listen(port, () => {
+        console.log(`API server listening on port ${port}`);
+      });
+    })
+    .catch(async (error) => {
+      console.error("[database] Startup check failed:", error.message, error.code || "NO_CODE");
+      await pool.end();
+      process.exitCode = 1;
+    });
 }
 module.exports = app;

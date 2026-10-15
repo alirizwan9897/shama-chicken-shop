@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import { getApiBaseUrl } from "../lib/apiUrl";
 export default function Signin() {
   const { login } = useAuth();
   const router = useRouter();
@@ -20,17 +21,14 @@ export default function Signin() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        'https://shama-chicken-shop.vercel.app/api/users/login',
+        `${getApiBaseUrl()}/api/users/login`,
         {
           email: formData.email,
-          password: formData.password
+          password: formData.password,
         }
       );
-      console.log('Login successful:', response.data);
-      alert("Login Successfull:", response.data)
       // Get user from either response.data.user or response.data
       const userData = response.data.user || response.data;
-      console.log('User data:', userData);
       login(userData);//update context
       // Save logged-in user
       localStorage.setItem(
@@ -39,11 +37,11 @@ export default function Signin() {
       );
       router.push('/');
     } catch (error) {
-      console.log("Login failed");
-      console.log("Status:", error.response?.status);
-      console.log("Backend Error:", error.response?.data);
+      console.error("Login failed:", error.message);
       alert(
-        error.response?.data?.message || "Invalid email or password"
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        (error.response ? "Invalid email or password" : "Unable to reach the server")
       );
     }
   };

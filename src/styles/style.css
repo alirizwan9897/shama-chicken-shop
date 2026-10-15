@@ -10,16 +10,16 @@ body {
 }
 
 .navbar {
+  position: sticky;
   top: 0;
   z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 24px;
-  padding: 20px 40px;
-  background: linear-gradient(135deg, #d4642b 0%, #c85a23 100%);
-  box-shadow: 0 8px 25px rgba(212, 100, 43, 0.25);
-  backdrop-filter: blur(10px);
+  gap: 16px;
+  padding: 10px 24px;
+  background: #ffffff;
+  border-bottom: 1px solid #e8e8e3;
 }
 
 .navbar-left {
@@ -29,10 +29,33 @@ body {
 }
 
 .logo {
-  font-size: 36px;
+  font-size: 17px;
   font-weight: bold;
-  letter-spacing: 3px;
-  color: #fff;
+  letter-spacing: 0;
+  color: #242b26;
+}
+
+.navbar-storefront form {
+  display: none !important;
+}
+
+.navbar-storefront+.menu {
+  display: none;
+}
+
+.navbar-storefront .nav-icons a {
+  padding: 7px 9px;
+  border-radius: 5px;
+  color: #4b514c;
+  font-size: 13px;
+}
+
+.navbar-storefront .nav-icons>a:last-child {
+  display: none;
+}
+
+.navbar-storefront .nav-icons a:hover {
+  background: #f4f3ef;
 }
 
 .search {
@@ -129,6 +152,42 @@ body {
     padding: 18px 24px;
   }
 
+  .navbar-storefront {
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding: 8px 14px;
+  }
+
+  .navbar-storefront .navbar-left {
+    gap: 7px;
+  }
+
+  .navbar-storefront .logo {
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .navbar-storefront .mobile-menu-btn {
+    padding: 4px;
+    font-size: 0;
+  }
+
+  .navbar-storefront .mobile-menu-btn::after {
+    content: "☰";
+    color: #343a35;
+    font-size: 18px;
+  }
+
+  .navbar-storefront .nav-icons {
+    width: auto;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  .navbar-storefront .nav-icons a:not(:last-child) {
+    display: none;
+  }
+
   .search {
     width: 100%;
     max-width: 500px;
@@ -197,6 +256,14 @@ body {
 @media (max-width:640px) {
   .navbar {
     padding: 16px 18px;
+  }
+
+  .navbar-storefront {
+    padding: 8px 12px;
+  }
+
+  .navbar-storefront .logo {
+    font-size: 13px;
   }
 
   .logo {

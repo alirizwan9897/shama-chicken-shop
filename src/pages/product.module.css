@@ -1,62 +1,176 @@
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    padding: 20px;
-}
-
-.card {
-    width: 100%;
+.productCard {
+    width: 250px;
     min-width: 0;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(249, 115, 22, 0.08);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     box-sizing: border-box;
 }
 
-/* Mobile: 2 cards per row */
+.imageContainer {
+    position: relative;
+    width: 100%;
+    height: 190px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #fff3eb, #ffe7d3);
+}
+
+.imageContainer img {
+    transition: transform 0.35s ease;
+}
+
+.productCard:hover .imageContainer img {
+    transform: scale(1.05);
+}
+
+.content {
+    padding: 16px 14px 14px;
+    box-sizing: border-box;
+}
+
+.productName {
+    margin: 0 0 8px;
+    color: #1f2937;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.35;
+    word-break: break-word;
+}
+
+.description {
+    margin: 0 0 12px;
+    color: #4b5563;
+    font-size: 13px;
+    line-height: 1.5;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+
+    min-height: 58px;
+}
+
+.priceBox {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.originalPrice {
+    color: #9ca3af;
+    font-size: 13px;
+    text-decoration: line-through;
+}
+
+.price {
+    color: #d45b20;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.discount {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #ecfdf5;
+    color: #15803d;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width: 850px) {
-    .product-grid {
-        display: grid !important;
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 8px !important;
-        padding: 8px !important;
+    .productCard {
+        width: 100%;
+        border-radius: 10px;
     }
 
-    .card {
-        width: 100% !important;
-        min-width: 0 !important;
-        margin: 0 !important;
-        box-sizing: border-box !important;
+    .imageContainer {
+        height: 130px;
     }
 
-    .card img {
-        width: 100% !important;
-        height: 120px !important;
-        object-fit: cover;
+    .content {
+        padding: 9px;
     }
 
-    .card-body {
+    .productName {
+        font-size: 15px;
+        margin-bottom: 5px;
+    }
+
+    .description {
+        font-size: 11px;
+        line-height: 1.4;
+        min-height: 46px;
+        margin-bottom: 7px;
+        line-clamp: 3;
+        -webkit-line-clamp: 3;
+    }
+
+    .priceBox {
+        gap: 5px;
+        margin-top: 5px;
+    }
+
+    .originalPrice {
+        font-size: 11px;
+    }
+
+    .price {
+        font-size: 15px;
+    }
+
+    .discount {
+        font-size: 9px;
+        padding: 2px 5px;
+    }
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 380px) {
+    .imageContainer {
+        height: 120px;
+    }
+
+    .content {
         padding: 8px;
     }
 
-    .card-body h3 {
-        font-size: 15px;
-        margin: 5px 0;
+    .productName {
+        font-size: 14px;
     }
 
-    .card-body p {
-        font-size: 16px;
-        margin: 5px 0;
+    .description {
+        font-size: 10px;
+        min-height: 43px;
     }
 
-    .btn-group {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
+    .originalPrice {
+        font-size: 10px;
     }
 
-    .cart-btn,
-    .buy-btn {
-        width: 100%;
-        font-size: 12px;
-        padding: 7px 4px;
+    .price {
+        font-size: 14px;
+    }
+
+    .discount {
+        font-size: 8px;
     }
 }
