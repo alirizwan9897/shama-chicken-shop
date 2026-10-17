@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  --site-font: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   --background: #fffaf7;
   --foreground: #171717;
   --brand-50: #fff3eb;
@@ -50,7 +51,7 @@ body {
     radial-gradient(circle at top left, rgba(249, 115, 22, 0.1), transparent 30%),
     linear-gradient(180deg, #fffaf6 0%, #fff4ef 100%);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--site-font);
 }
 
 

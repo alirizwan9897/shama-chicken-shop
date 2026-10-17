@@ -1,0 +1,45 @@
+.continuePaymentButton {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    margin: 24px 0;
+    padding: 16px 24px;
+
+    background: linear-gradient(135deg, #d3541a, #e8752b);
+    color: #ffffff;
+
+    font-size: 17px;
+    font-weight: 700;
+    text-align: center;
+
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+
+    box-shadow: 0 5px 14px rgba(211, 84, 26, 0.22);
+    transition: background 0.3s ease, transform 0.2s ease,
+        box-shadow 0.3s ease;
+}
+
+.continuePaymentButton:hover {
+    background: linear-gradient(135deg, #b84412, #d3541a);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(211, 84, 26, 0.3);
+}
+
+.continuePaymentButton:active {
+    transform: translateY(0);
+}
+
+.continuePaymentButton:focus-visible {
+    outline: 3px solid #f5a623;
+    outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+    .continuePaymentButton {
+        max-width: 100%;
+        padding: 14px 18px;
+        font-size: 16px;
+    }
+}

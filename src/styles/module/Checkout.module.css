@@ -24,7 +24,6 @@
 
 .title {
     margin: 0;
-    font-family: Georgia, "Times New Roman", serif;
     font-size: 34px;
     line-height: 1.15;
 }
@@ -102,7 +101,6 @@
 .sectionHeading h2,
 .summaryTitle {
     margin: 0;
-    font-family: Georgia, "Times New Roman", serif;
     font-size: 21px;
 }
 

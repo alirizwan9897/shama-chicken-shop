@@ -57,7 +57,6 @@ export default function Home() {
         localStorage.removeItem(CART_STORAGE_KEY);
       }
     }
-
     setIsLoaded(true);
   }, []);
 
@@ -138,19 +137,44 @@ export default function Home() {
 
   const addToCart = (product) => {
     setCart((prev) => [...prev, product]);
+    alert(`${product.name} added to cart successfully!`);
+
   };
 
   /* =========================
      BUY NOW
   ========================= */
 
-  const buyNow = (product) => {
-    localStorage.setItem(
-      "buy-now-product",
-      JSON.stringify(product)
-    );
+  /* =========================
+    BUY NOW
+ ========================= */
 
-    router.push("/checkout");
+  const buyNow = (product) => {
+    try {
+      const checkoutProduct = {
+        id: product.id,
+        name: product.name || product.title,
+        price: Number(product.price) || 0,
+        quantity: 1,
+        image:
+          typeof product.image === "string" &&
+            !product.image.startsWith("data:")
+            ? product.image
+            : "",
+      };
+
+      localStorage.setItem(
+        "buy-now-product",
+        JSON.stringify(checkoutProduct)
+      );
+      localStorage.removeItem("checkout-cart");
+
+      router.push("/checkout?newAddress=1");
+
+    } catch (error) {
+      console.error("Buy Now error:", error);
+      alert("Unable to proceed. Please try again.");
+    }
   };
 
   /* =========================
@@ -202,6 +226,34 @@ export default function Home() {
         ...(search && { search }),
       },
     });
+  };
+
+  const handlePlaceOrder = async () => {
+    try {
+      setLoading(true);
+
+      // Keep your existing backend order API request here.
+      const response = await axios.post(
+        `${getApiBaseUrl()}/api/orders`,
+        orderData
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        router.push("/order-success");
+      }
+    } catch (error) {
+      console.error(
+        "Place order error:",
+        error.response?.data || error.message
+      );
+
+      alert(
+        error.response?.data?.message ||
+        "Order could not be placed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

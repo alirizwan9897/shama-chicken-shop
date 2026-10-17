@@ -1,7 +1,6 @@
 
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import DeliveryAddress from "../components/Delivery/Address";
 import styles from "../styles/module/Checkout.module.css";
 
@@ -9,48 +8,103 @@ export default function Checkout() {
     const router = useRouter();
 
     const [address, setAddress] = useState(null);
-    const [product, setProduct] = useState(null);
+    const [checkoutItems, setCheckoutItems] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // Load Buy Now product or multiple cart items
     useEffect(() => {
+        if (!router.isReady) return;
+
         try {
             const buyNowProduct = localStorage.getItem("buy-now-product");
-            const savedAddress = localStorage.getItem("delivery-address");
+            const savedCart = localStorage.getItem("checkout-cart");
 
-            if (!buyNowProduct) {
+            const isNewAddress = router.query.newAddress === "1";
+
+            if (buyNowProduct) {
+                const item = JSON.parse(buyNowProduct);
+
+                setCheckoutItems([
+                    {
+                        ...item,
+                        quantity: Number(item.quantity) || 1,
+                    },
+                ]);
+            } else if (savedCart) {
+                const items = JSON.parse(savedCart);
+
+                if (!Array.isArray(items) || items.length === 0) {
+                    router.replace("/products");
+                    return;
+                }
+
+                setCheckoutItems(
+                    items.map((item) => ({
+                        ...item,
+                        quantity: Number(item.quantity) || 1,
+                    }))
+                );
+            } else {
                 router.replace("/products");
                 return;
             }
 
-            setProduct(JSON.parse(buyNowProduct));
+            if (isNewAddress) {
+                // New Buy Now: ask for a fresh address
+                setAddress(null);
+                localStorage.removeItem("checkout-address");
+            } else {
+                // Normal checkout: load previously saved address
+                const savedAddress = localStorage.getItem("delivery-address");
 
-            if (savedAddress) {
-                setAddress(JSON.parse(savedAddress));
+                setAddress(
+                    savedAddress ? JSON.parse(savedAddress) : null
+                );
             }
         } catch (error) {
             console.error("Checkout loading error:", error);
-            router.replace("/products");
+            setAddress(null);
         } finally {
             setLoading(false);
         }
-    }, [router]);
+    }, [router.isReady, router.query.newAddress]);
+    // Calculate total for all products
+    const checkoutTotal = checkoutItems.reduce(
+        (sum, item) =>
+            sum +
+            (Number(item.price) || 0) *
+            (Number(item.quantity) || 1),
+        0
+    );
 
+    // Save address and continue to payment
     const handleAddressConfirmed = (deliveryAddress) => {
-        setAddress(deliveryAddress);
-
-        localStorage.setItem(
-            "delivery-address",
-            JSON.stringify(deliveryAddress)
-        );
-
-        router.push("/payment");
+        try {
+            localStorage.setItem(
+                "delivery-address",
+                JSON.stringify(deliveryAddress)
+            );
+            localStorage.setItem(
+                "checkout-total",
+                String(checkoutTotal)
+            );
+            setAddress(deliveryAddress);
+            router.push("/payment");
+        } catch (error) {
+            console.error("Saving delivery address failed:", error);
+            alert("Unable to save address. Please try again.");
+        }
     };
-
     const goToPayment = () => {
         if (!address) {
             alert("Please confirm your delivery address.");
             return;
         }
+
+        localStorage.setItem(
+            "checkout-total",
+            String(checkoutTotal)
+        );
 
         router.push("/payment");
     };
@@ -59,27 +113,48 @@ export default function Checkout() {
         return <p className={styles.loading}>Loading checkout...</p>;
     }
 
-    if (!product) {
-        return <p className={styles.loading}>Returning to the menu...</p>;
+    if (checkoutItems.length === 0) {
+        return (
+            <p className={styles.loading}>
+                No items found. Returning to the menu...
+            </p>
+        );
     }
 
     return (
         <div className={styles.checkout}>
             <header className={styles.header}>
                 <p className={styles.eyebrow}>ALMOST THERE</p>
+
                 <h1 className={styles.title}>Checkout</h1>
-                <p className={styles.subtitle}>Confirm where you would like your order delivered.</p>
-                <div className={styles.steps} aria-label="Checkout progress">
+
+                <p className={styles.subtitle}>
+                    Confirm where you would like your order delivered.
+                </p>
+
+                <div
+                    className={styles.steps}
+                    aria-label="Checkout progress"
+                >
                     <span className={styles.activeStep}>
-                        <span className={styles.stepNumber}>1</span> Delivery
+                        <span className={styles.stepNumber}>1</span>
+                        {" "}Delivery
                     </span>
-                    <span className={styles.stepDivider} aria-hidden="true" />
+
+                    <span
+                        className={styles.stepDivider}
+                        aria-hidden="true"
+                    />
+
                     <span>2 Payment</span>
                 </div>
             </header>
 
             <div className={styles.content}>
-                <section className={styles.deliverySection} aria-labelledby="delivery-heading">
+                <section
+                    className={styles.deliverySection}
+                    aria-labelledby="delivery-heading"
+                >
                     {!address ? (
                         <DeliveryAddress
                             onAddressConfirmed={handleAddressConfirmed}
@@ -87,35 +162,62 @@ export default function Checkout() {
                     ) : (
                         <>
                             <div className={styles.sectionHeading}>
-                                <span className={styles.sectionNumber}>1</span>
+                                <span className={styles.sectionNumber}>
+                                    1
+                                </span>
+
                                 <div>
-                                    <h2 id="delivery-heading">Delivery address</h2>
-                                    <p>Make sure your details are correct.</p>
+                                    <h2 id="delivery-heading">
+                                        Delivery address
+                                    </h2>
+
+                                    <p>
+                                        Make sure your details are correct.
+                                    </p>
                                 </div>
                             </div>
+
                             <div className={styles.addressPanel}>
-                                <p className={styles.addressName}>{address.name}</p>
-                                <p className={styles.addressPhone}>{address.phone}</p>
-                                {[address.house, address.street].filter(Boolean).length > 0 && (
-                                    <p className={styles.addressText}>
-                                        {[address.house, address.street].filter(Boolean).join(", ")}
+                                <p className={styles.addressName}>
+                                    {address.name}
+                                </p>
+
+                                <p className={styles.addressPhone}>
+                                    {address.phone}
+                                </p>
+
+                                <p className={styles.addressText}>
+                                    {[address.house, address.street]
+                                        .filter(Boolean)
+                                        .join(", ")}
+                                </p>
+
+                                <p className={styles.addressText}>
+                                    {[address.city, address.state]
+                                        .filter(Boolean)
+                                        .join(", ")}
+                                    {address.pincode
+                                        ? ` - ${address.pincode}`
+                                        : ""}
+                                </p>
+
+                                {address.landmark && (
+                                    <p className={styles.addressNote}>
+                                        Near {address.landmark}
                                     </p>
                                 )}
-                                <p className={styles.addressText}>
-                                    {[address.city, address.state].filter(Boolean).join(", ")}
-                                    {address.pincode ? ` - ${address.pincode}` : ""}
-                                </p>
-                                {address.landmark && (
-                                    <p className={styles.addressNote}>Near {address.landmark}</p>
-                                )}
+
                                 <div className={styles.addressActions}>
                                     <button
+                                        type="button"
                                         className={styles.changeButton}
                                         onClick={() => setAddress(null)}
                                     >
                                         Change address
                                     </button>
+
                                     <button
+                                        type="button"
                                         className={styles.continueButton}
                                         onClick={goToPayment}
                                     >
@@ -127,29 +229,69 @@ export default function Checkout() {
                     )}
                 </section>
 
-                <aside className={styles.summaryPanel} aria-labelledby="summary-title">
-                    <h2 id="summary-title" className={styles.summaryTitle}>Your order</h2>
-                    <div className={styles.productRow}>
-                        <Image
-                            className={styles.productImage}
-                            src={product.image}
-                            alt={product.name || "Your selected meal"}
-                            width={68}
-                            height={68}
-                        />
-                        <div>
-                            <p className={styles.productName}>{product.name}</p>
-                            <p className={styles.productHint}>Quantity: 1</p>
-                            <p className={styles.productPrice}>
-                                ₹{Number(product.price || 0).toFixed(2)}
-                            </p>
+                <aside
+                    className={styles.summaryPanel}
+                    aria-labelledby="summary-title"
+                >
+                    <h2
+                        id="summary-title"
+                        className={styles.summaryTitle}
+                    >
+                        Your order
+                    </h2>
+
+                    {checkoutItems.map((item, index) => (
+                        <div
+                            className={styles.productRow}
+                            key={`${item.id || item.name}-${index}`}
+                        >
+                            {item.image &&
+                                !item.image.startsWith("data:") && (
+                                    <img
+                                        className={styles.productImage}
+                                        src={item.image}
+                                        alt={item.name || "Product"}
+                                        width="68"
+                                        height="68"
+                                    />
+                                )}
+
+                            <div>
+                                <p className={styles.productName}>
+                                    {item.name}
+                                </p>
+
+                                <p className={styles.productHint}>
+                                    Quantity: {Number(item.quantity) || 1}
+                                </p>
+
+                                <p className={styles.productPrice}>
+                                    ₹
+                                    {(
+                                        (Number(item.price) || 0) *
+                                        (Number(item.quantity) || 1)
+                                    ).toFixed(2)}
+                                </p>
+                            </div>
                         </div>
-                    </div>
+                    ))}
+
                     <div className={styles.totalRow}>
                         <span>Total</span>
-                        <strong>₹{Number(product.price || 0).toFixed(2)}</strong>
+
+                        <strong>
+                            ₹
+                            {checkoutTotal.toLocaleString("en-IN", {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            })}
+                        </strong>
                     </div>
-                    <p className={styles.secureNote}>Delivery and payment details are confirmed in the next step.</p>
+
+                    <p className={styles.secureNote}>
+                        Delivery and payment details are confirmed in the
+                        next step.
+                    </p>
                 </aside>
             </div>
         </div>

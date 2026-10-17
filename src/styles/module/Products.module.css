@@ -89,7 +89,6 @@
 .intro h1 {
     max-width: 580px;
     margin: 0;
-    font-family: Georgia, "Times New Roman", serif;
     font-size: 40px;
     font-weight: 700;
     line-height: 1.08;
@@ -158,7 +157,6 @@
 
 .menuHeading h2 {
     margin: 0;
-    font-family: Georgia, "Times New Roman", serif;
     font-size: 27px;
     line-height: 1.2;
 }
@@ -227,12 +225,14 @@
 
 .actions {
     display: flex;
+    min-width: 0;
     gap: 8px;
     padding: 0 12px 12px;
 }
 
 .addButton,
 .buyButton {
+    min-width: 0;
     min-height: 38px;
     border: 0;
     border-radius: 5px;
@@ -311,6 +311,17 @@
 
     .buyButton {
         padding: 0 7px;
+    }
+}
+
+@media (max-width: 420px) {
+    .actions {
+        flex-direction: column;
+    }
+
+    .addButton,
+    .buyButton {
+        width: 100%;
     }
 }
 
