@@ -1,14 +1,27 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { useAuth } from "../context/AuthContext";
 import styles from "../styles/module/Cart.module.css";
 const CART_STORAGE_KEY = "crispy-chicken-cart";
 
 export default function Cart() {
   const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
 
   const [cart, setCart] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (authLoading || !router.isReady) return;
+
+    if (!user) {
+      router.replace({
+        pathname: "/mobile-signup",
+        query: { next: "/checkout" },
+      });
+    }
+  }, [authLoading, user, router]);
 
   // Load cart from localStorage
   useEffect(() => {
@@ -61,11 +74,19 @@ export default function Cart() {
 
   // Buy individual product
   const buyNow = (product) => {
+    if (authLoading) return;
     localStorage.setItem(
       "buy-now-product",
       JSON.stringify(product)
     );
 
+    if (!user) {
+      router.push({
+        pathname: "/mobile-signup",
+        query: { next: "/checkout?newAddress=1" },
+      });
+      return;
+    }
     router.push("/checkout");
   };
 
@@ -80,6 +101,7 @@ export default function Cart() {
   // Continue with all cart items
 
   const continueToPayment = () => {
+    if (authLoading) return;
     if (cart.length === 0) {
       alert("Your cart is empty!");
       return;
@@ -115,77 +137,79 @@ export default function Cart() {
     }
   };
 
+  if (authLoading || !user) return null;
+
   return (
-    <div className="products">
-      <h1>Your Cart</h1>
+  <div className="products">
+    <h1>Your Cart</h1>
 
-      {cart.length === 0 ? (
-        <p>Your cart is empty.</p>
-      ) : (
-        <>
-          <section className="cart-grid">
-            {cart.map((item, index) => (
-              <div
-                className="card"
-                key={`${item.id}-${index}`}
-              >
-                <img
-                  src={item.image}
-                  alt={item.name || "Product"}
-                />
+    {cart.length === 0 ? (
+      <p>Your cart is empty.</p>
+    ) : (
+      <>
+        <section className="cart-grid">
+          {cart.map((item, index) => (
+            <div
+              className="card"
+              key={`${item.id}-${index}`}
+            >
+              <img
+                src={item.image}
+                alt={item.name || "Product"}
+              />
 
-                <div className="card-body">
-                  <h3>{item.name}</h3>
+              <div className="card-body">
+                <h3>{item.name}</h3>
 
-                  <p>
-                    ₹
-                    {(Number(item.price) || 0).toLocaleString(
-                      "en-IN",
-                      {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      }
-                    )}
-                  </p>
+                <p>
+                  ₹
+                  {(Number(item.price) || 0).toLocaleString(
+                    "en-IN",
+                    {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    }
+                  )}
+                </p>
 
-                  <div className="btn-group">
-                    <button
-                      className="buy-btn"
-                      onClick={() => buyNow(item)}
-                    >
-                      Buy Now
-                    </button>
+                <div className="btn-group">
+                  <button
+                    className="buy-btn"
+                    onClick={() => buyNow(item)}
+                  >
+                    Buy Now
+                  </button>
 
-                    <button
-                      className="remove-btn"
-                      onClick={() => removeFromCart(index)}
-                    >
-                      Remove
-                    </button>
-                  </div>
+                  <button
+                    className="remove-btn"
+                    onClick={() => removeFromCart(index)}
+                  >
+                    Remove
+                  </button>
                 </div>
               </div>
-            ))}
-          </section>
+            </div>
+          ))}
+        </section>
 
-          <div className="cart-total">
-            <strong>Total:</strong>{" "}
-            ₹
-            {total.toLocaleString("en-IN", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
-          </div>
+        <div className="cart-total">
+          <strong>Total:</strong>{" "}
+          ₹
+          {total.toLocaleString("en-IN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
+        </div>
 
-          <button
-            type="button"
-            className={styles.continuePaymentButton}
-            onClick={continueToPayment}
-          >
-            Continue to Payment
-          </button>
-        </>
-      )}
-    </div>
+        <button
+          type="button"
+          className={styles.continuePaymentButton}
+          onClick={continueToPayment}
+        >
+          Continue to Payment
+        </button>
+      </>
+    )}
+  </div>
   );
 }

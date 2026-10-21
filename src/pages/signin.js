@@ -35,7 +35,8 @@ export default function Signin() {
         'shama-chicken-shop-auth',
         JSON.stringify(userData)
       );
-      router.push('/');
+      const next = typeof router.query.next === "string" ? router.query.next : "/";
+      router.push(next.startsWith("/") && !next.startsWith("//") ? next : "/");
     } catch (error) {
       console.error("Login failed:", error.message);
       alert(

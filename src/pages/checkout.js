@@ -2,10 +2,12 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import DeliveryAddress from "../components/Delivery/Address";
+import { useAuth } from "../context/AuthContext";
 import styles from "../styles/module/Checkout.module.css";
 
 export default function Checkout() {
     const router = useRouter();
+    const { user, loading: authLoading } = useAuth();
 
     const [address, setAddress] = useState(null);
     const [checkoutItems, setCheckoutItems] = useState([]);
@@ -13,7 +15,11 @@ export default function Checkout() {
 
     // Load Buy Now product or multiple cart items
     useEffect(() => {
-        if (!router.isReady) return;
+        if (!router.isReady || authLoading) return;
+        if (!user) {
+            router.replace({ pathname: "/mobile-signup", query: { next: router.asPath } });
+            return;
+        }
 
         try {
             const buyNowProduct = localStorage.getItem("buy-now-product");
@@ -67,7 +73,7 @@ export default function Checkout() {
         } finally {
             setLoading(false);
         }
-    }, [router.isReady, router.query.newAddress]);
+    }, [router.isReady, router.query.newAddress, router.asPath, user, authLoading]);
     // Calculate total for all products
     const checkoutTotal = checkoutItems.reduce(
         (sum, item) =>

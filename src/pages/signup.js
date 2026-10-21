@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/router";
 import axios from "axios"
 import { getApiBaseUrl } from "../lib/apiUrl";
@@ -10,6 +10,11 @@ export default function Signup() {
     email: "",
     password: "",
   });
+  useEffect(() => {
+    if (typeof router.query.phone === "string") {
+      setFormData((previous) => ({ ...previous, phone: router.query.phone }));
+    }
+  }, [router.query.phone]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value, });
@@ -19,9 +24,10 @@ export default function Signup() {
     console.log("Complete form Data", formData)
     try {
       const response = await axios.post(
-        `${getApiBaseUrl()}/api/users/signup`, formData
+        `${getApiBaseUrl()}/api/users/create`, formData
       );
-      router.push("/signin");;
+      const next = typeof router.query.next === "string" ? router.query.next : "";
+      router.push({ pathname: "/signin", query: next ? { next } : {} });
     }
     catch (error) {
       alert(

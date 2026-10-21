@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import Link from "next/link";
 import { getApiBaseUrl } from "../lib/apiUrl";
+import { useAuth } from "../context/AuthContext";
 import ProductCard from "../components/ProductCard";
 import styles from "../styles/module/Products.module.css";
 
@@ -24,6 +25,7 @@ function normalizeProducts(items) {
 
 export default function Home() {
   const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
 
   const selectedCategory =
     typeof router.query.category === "string"
@@ -136,9 +138,15 @@ export default function Home() {
   ========================= */
 
   const addToCart = (product) => {
-    setCart((prev) => [...prev, product]);
+    if (authLoading) return;
+    const nextCart = [...cart, product];
+    setCart(nextCart);
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(nextCart));
+    if (!user) {
+      router.push({ pathname: "/mobile-signup", query: { next: "/cart" } });
+      return;
+    }
     alert(`${product.name} added to cart successfully!`);
-
   };
 
   /* =========================
@@ -151,6 +159,7 @@ export default function Home() {
 
   const buyNow = (product) => {
     try {
+      if (authLoading) return;
       const checkoutProduct = {
         id: product.id,
         name: product.name || product.title,
@@ -169,6 +178,13 @@ export default function Home() {
       );
       localStorage.removeItem("checkout-cart");
 
+      if (!user) {
+        router.push({
+          pathname: "/mobile-signup",
+          query: { next: "/checkout?newAddress=1" },
+        });
+        return;
+      }
       router.push("/checkout?newAddress=1");
 
     } catch (error) {

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from "next/router";
+import axios from "axios";
+import { getApiBaseUrl } from "../lib/apiUrl";
 export default function MobileSignup() {
   const [phone, setPhone] = useState('');
   const [loginform, setLoginForm] = useState(true);
@@ -25,14 +27,26 @@ export default function MobileSignup() {
     setGeneratedOtp(otp);
     setLoginForm(false); // Switch to OTP form after phone number submission  
   }
-  const verifyOtp = (e) => {
+  const verifyOtp = async (e) => {
     e.preventDefault();
-    // Handle OTP verification logic here
-    console.log("Entered OTP:", otp);
-    console.log("Correct OTP:", generatedOtp);
     if (String(otp).trim() === String(generatedOtp).trim()) {
-      alert("OTP verified successfully.");
-      router.push("/signup"); // Redirect to signup page after successful OTP verification
+      try {
+        const response = await axios.get(
+          `${getApiBaseUrl()}/api/users/by-phone/${phone}`
+        );
+        const next = typeof router.query.next === "string" ? router.query.next : "";
+        const nextQuery = next ? { next } : {};
+        if (response.data.exists) {
+          router.push({ pathname: "/signin", query: nextQuery });
+        } else {
+          router.push({ pathname: "/signup", query: { ...nextQuery, phone } });
+        }
+      } catch (error) {
+        alert(
+          error.response?.data?.error ||
+          "Unable to verify this phone number. Please try again."
+        );
+      }
     } else {
       alert("Invalid OTP. Please try again.");
     }
@@ -42,7 +56,7 @@ export default function MobileSignup() {
       {loginform && (
         <form className="auth-form" onSubmit={handleSubmit}>
           <h1>Log in or signup</h1>
-          <input type="text" placeholder="Phone Number" maxLength="10" onChange={handlePhoneChange} />
+          <input type="text" placeholder="Phone Number" maxLength="10" value={phone} onChange={handlePhoneChange} />
           <button type="submit">Continue</button>
         </form>
       )}

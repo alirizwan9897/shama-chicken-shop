@@ -2,7 +2,9 @@ const express = require('express');
 const pool = require('../maindb');
 const { hashPassword, verifyPassword, publicUser, validateUserInput } = require('../users');
 const router = express.Router();
-router.post('/signup', async (req, res) => {
+router.post('/signup', createUser);
+router.post('/create', createUser);
+async function createUser(req, res) {
   try {
     const validation = validateUserInput(req.body);
     if (validation.error) return res.status(400).json({ error: validation.error });
@@ -15,7 +17,7 @@ router.post('/signup', async (req, res) => {
   } catch (error) {
     return handleDatabaseError(error, res);
   }
-});
+}
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -43,6 +45,21 @@ router.post('/login', async (req, res) => {
       message: 'Login successful',
       user: publicUser(user)
     });
+  } catch (error) {
+    return handleDatabaseError(error, res);
+  }
+});
+router.get('/by-phone/:phone', async (req, res) => {
+  const { phone } = req.params;
+  if (!/^\d{10}$/.test(phone)) {
+    return res.status(400).json({ error: 'phone must be exactly 10 digits' });
+  }
+  try {
+    const result = await pool.query(
+      'SELECT 1 FROM users WHERE phone = $1 LIMIT 1',
+      [phone]
+    );
+    return res.status(200).json({ exists: result.rowCount > 0 });
   } catch (error) {
     return handleDatabaseError(error, res);
   }

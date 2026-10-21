@@ -28,6 +28,9 @@ The API runs at `http://localhost:4000` by default:
 
 ```text
 POST   /api/users/signup
+POST   /api/users/create
+POST   /api/users/login
+GET    /api/users/by-phone/:phone
 GET    /api/users/get
 GET    /api/users/:id
 PUT    /api/users/:id
@@ -44,7 +47,7 @@ Product image uploads also require these Vercel Environment Variables:
 `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET`.
 Redeploy after adding or changing them.
 
-Create a user by sending JSON with `name`, `email`, and `password`. The optional `role` defaults to `user`.
+Create a user through `/signup` or `/create` by sending JSON with `name`, `phone`, `email`, and `password`. The optional `role` defaults to `user`. The phone lookup endpoint reports whether an account exists for a 10-digit phone number.
 
 You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
 

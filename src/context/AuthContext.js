@@ -3,16 +3,19 @@ const AuthContext = createContext();
 const AUTH_KEY = "shama-chicken-shop-auth";
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
     // Get user when application starts
     useEffect(() => {
-        const savedUser = localStorage.getItem(AUTH_KEY);
-        if (savedUser) {
-            try {
+        try {
+            const savedUser = localStorage.getItem(AUTH_KEY);
+            if (savedUser) {
                 setUser(JSON.parse(savedUser));
-            } catch (error) {
-                console.log("Invalid user data");
-                localStorage.removeItem(AUTH_KEY);
             }
+        } catch (error) {
+            console.log("Invalid user data");
+            localStorage.removeItem(AUTH_KEY);
+        } finally {
+            setLoading(false);
         }
     }, []);
     // Login
@@ -32,6 +35,7 @@ export function AuthProvider({ children }) {
         <AuthContext.Provider
             value={{
                 user,
+                loading,
                 login,
                 logout,
             }}

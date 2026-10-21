@@ -8,13 +8,18 @@ export default function Payment() {
     const router = useRouter();
     const [address, setAddress] = useState(null);
     const [product, setProduct] = useState(null);
-    const { user } = useAuth();
+    const { user, loading: authLoading } = useAuth();
     const [paymentMethod, setPaymentMethod] = useState("COD");
     const [isSubmitting, setIsSubmitting] = useState(false);
     // --------------------------------
     // Load address and product
     // --------------------------------
     useEffect(() => {
+        if (authLoading) return;
+        if (!user) {
+            router.replace({ pathname: "/mobile-signup", query: { next: router.asPath } });
+            return;
+        }
         const savedAddress =
             localStorage.getItem("delivery-address");
         const savedProduct =
@@ -39,11 +44,15 @@ export default function Payment() {
                 );
             }
         }
-    }, []);
+    }, [authLoading, user, router.asPath]);
     // --------------------------------
     // Place Order
     // --------------------------------
     const placeOrder = async () => {
+        if (!user) {
+            router.push({ pathname: "/mobile-signup", query: { next: router.asPath } });
+            return;
+        }
         if (!address) {
             alert("Delivery address not found");
             return;
