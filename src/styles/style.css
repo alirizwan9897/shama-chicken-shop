@@ -202,9 +202,11 @@ body {
 
   .menu {
     position: fixed;
-    inset: 0;
-    left: 100%;
-    width: 100%;
+    top: 0;
+    bottom: 0;
+    left: -50vw;
+    right: auto;
+    width: 50vw;
     height: 100dvh;
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -259,7 +261,11 @@ body {
   }
 
   .menu-overlay {
-    display: none;
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(36, 43, 38, 0.35);
+    z-index: 998;
   }
 
   .menu a {
@@ -317,11 +323,13 @@ body {
 
   .menu {
     gap: 0;
-    padding: 14px 18px;
+    padding: 0;
   }
 
   .menu a {
-    font-size: 16px;
+    min-height: 52px;
+    padding: 14px 12px;
+    font-size: 15px;
   }
 }
 
