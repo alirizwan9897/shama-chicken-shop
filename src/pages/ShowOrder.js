@@ -95,17 +95,17 @@ export default function ShowOrder() {
                         <tbody>
                             {orders.map((order) => (
                                 <tr key={order.id}>
-                                    <td>#{order.id}</td>
-                                    <td>{order.customer_name}</td>
-                                    <td>{order.phone}</td>
-                                    <td>{order.address}</td>
-                                    <td>{order.city}</td>
-                                    <td>{order.pincode}</td>
-                                    <td>
+                                    <td data-label="Order ID">#{order.id}</td>
+                                    <td data-label="Customer">{order.customer_name}</td>
+                                    <td data-label="Phone">{order.phone}</td>
+                                    <td data-label="Address">{order.address}</td>
+                                    <td data-label="City">{order.city}</td>
+                                    <td data-label="Pincode">{order.pincode}</td>
+                                    <td data-label="Total">
                                         ₹{Number(order.total_amount).toFixed(2)}
                                     </td>
-                                    <td>{order.payment_method}</td>
-                                    <td>
+                                    <td data-label="Payment">{order.payment_method}</td>
+                                    <td data-label="Payment Status">
                                         <span
                                             className={`${styles.badge} ${styles[order.payment_status]}`}
                                         >
@@ -114,7 +114,7 @@ export default function ShowOrder() {
                                                 : order.payment_status}
                                         </span>
                                     </td>
-                                    <td>
+                                    <td data-label="Order Status">
                                         <select
                                             value={order.order_status}
                                             onChange={(e) =>
@@ -145,7 +145,7 @@ export default function ShowOrder() {
                                             </option>
                                         </select>
                                     </td>
-                                    <td>
+                                    <td data-label="Created">
                                         {new Date(
                                             order.created_at
                                         ).toLocaleString("en-IN")}

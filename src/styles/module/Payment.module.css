@@ -111,25 +111,27 @@
 }
 
 /* Place Order */
-
 .placeOrderButton {
-    width: 100%;
-    margin-top: 20px;
-    padding: 15px;
+    background: #16a34a;
+    color: #ffffff;
     border: none;
+    padding: 12px 24px;
     border-radius: 8px;
-    font-size: 17px;
-    font-weight: bold;
+    font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
+    transition: background 0.2s ease;
 }
 
-.placeOrderButton:hover {
-    opacity: 0.9;
+.placeOrderButton:hover:not(:disabled) {
+    background: #15803d;
 }
 
 .placeOrderButton:disabled {
-    opacity: 0.6;
+    background: #86c995;
+    color: #ffffff;
     cursor: not-allowed;
+    opacity: 0.8;
 }
 
 /* Mobile */
