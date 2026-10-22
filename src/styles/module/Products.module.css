@@ -267,9 +267,27 @@
     font-size: 14px;
 }
 
+.foodGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    width: min(100%, 1160px);
+    margin: 0 auto;
+}
+
+.textOnlyGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 @media (max-width: 900px) {
-    .productGrid {
+
+    .productGrid,
+    .foodGrid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .textOnlyGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -296,6 +314,11 @@
     .productGrid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 11px;
+    }
+
+    .textOnlyGrid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
     }
 
     .actions {

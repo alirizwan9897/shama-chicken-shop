@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import styles from "../styles/module/Products.module.css";
 
-export default function FoodGrid() {
+export default function FoodGrid({ showImages = true }) {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
@@ -12,9 +12,9 @@ export default function FoodGrid() {
     }, []);
 
     return (
-        <div className={styles.foodGrid}>
+        <div className={`${styles.foodGrid} ${showImages ? "" : styles.textOnlyGrid}`}>
             {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={product} showImage={showImages} />
             ))}
         </div>
     );

@@ -2,7 +2,7 @@
 import Image from "next/image";
 import styles from "./product.module.css";
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, showImage = true }) {
   const price = Number(product?.price || 0);
 
   const originalPrice = Number(
@@ -18,22 +18,24 @@ export default function ProductCard({ product }) {
 
   return (
     <article className={styles.productCard}>
-      <div className={styles.imageContainer}>
-        <Image
-          src={product.image}
-          alt={product.name || "Chicken dish"}
-          fill
-          sizes="(max-width: 850px) 50vw, (max-width: 1200px) 33vw, 25vw"
-          style={{ objectFit: "cover" }}
-          quality={75}
-        />
+      {showImage && (
+        <div className={styles.imageContainer}>
+          <Image
+            src={product.image}
+            alt={product.name || "Chicken dish"}
+            fill
+            sizes="(max-width: 850px) 50vw, (max-width: 1200px) 33vw, 25vw"
+            style={{ objectFit: "cover" }}
+            quality={75}
+          />
 
-        {hasDiscount && (
-          <span className={styles.discountBadge}>
-            {discount}% OFF
-          </span>
-        )}
-      </div>
+          {hasDiscount && (
+            <span className={styles.discountBadge}>
+              {discount}% OFF
+            </span>
+          )}
+        </div>
+      )}
 
       <div className={styles.content}>
         {product.category && (

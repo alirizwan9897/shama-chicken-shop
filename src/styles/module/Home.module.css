@@ -1,0 +1,57 @@
+.homePage {
+    width: 100%;
+    min-height: 80vh;
+    padding: 32px 24px 48px;
+    box-sizing: border-box;
+    background: linear-gradient(135deg, #fffaf5 0%, #fff1e6 100%);
+}
+
+.heroCopy {
+    width: min(100%, 1160px);
+    margin: 0 auto 28px;
+    text-align: center;
+}
+
+.kicker {
+    margin: 0 0 8px;
+    color: #f4511e;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.heroCopy h1 {
+    margin: 0;
+    color: #242b26;
+    font-size: 42px;
+    line-height: 1.08;
+}
+
+.heroCopy h1 span {
+    color: #f4511e;
+}
+
+.subtitle {
+    margin: 12px 0 0;
+    color: #737a74;
+    font-size: 15px;
+}
+
+@media (max-width: 680px) {
+    .homePage {
+        padding: 22px 14px 36px;
+    }
+
+    .heroCopy {
+        margin-bottom: 22px;
+        text-align: left;
+    }
+
+    .heroCopy h1 {
+        font-size: 30px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+    }
+}

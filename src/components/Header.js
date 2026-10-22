@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "../context/AuthContext";
 import CreateProduct from "./CreateProduct";
@@ -14,6 +14,12 @@ export default function Header() {
   const [showForm, setShowForm] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+
+  useEffect(() => {
+    document.body.classList.toggle("mobile-menu-open", menuOpen);
+    return () => document.body.classList.remove("mobile-menu-open");
+  }, [menuOpen]);
+
   // =========================
   // SEARCH
   // =========================

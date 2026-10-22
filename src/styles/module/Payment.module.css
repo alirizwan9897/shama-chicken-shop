@@ -111,27 +111,26 @@
 }
 
 /* Place Order */
+
 .placeOrderButton {
-    background: #16a34a;
+    background-color: #16a34a !important;
     color: #ffffff;
+    width: 100%;
+    margin-top: 20px;
+    padding: 15px;
     border: none;
-    padding: 12px 24px;
     border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 17px;
+    font-weight: bold;
     cursor: pointer;
-    transition: background 0.2s ease;
+}
+
+.placeOrderButton:hover {
+    opacity: 0.9;
 }
 
 .placeOrderButton:hover:not(:disabled) {
-    background: #15803d;
-}
-
-.placeOrderButton:disabled {
-    background: #86c995;
-    color: #ffffff;
-    cursor: not-allowed;
-    opacity: 0.8;
+    background-color: #15803d !important;
 }
 
 /* Mobile */
