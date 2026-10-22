@@ -290,10 +290,22 @@ export default function Header() {
       {/* =====================================================
           MOBILE / MAIN MENU
       ===================================================== */}
-      <div
-        className={`menu ${menuOpen ? "open" : ""
-          }`}
+      <nav
+        className={`menu ${menuOpen ? "open" : ""}`}
+        aria-label="Main menu"
+        aria-hidden={!menuOpen}
       >
+        <div className="mobile-menu-header">
+          <span>Menu</span>
+          <button
+            type="button"
+            className="mobile-menu-close"
+            onClick={() => setMenuOpen(false)}
+            aria-label="Close menu"
+          >
+            ×
+          </button>
+        </div>
         <Link
           href="/"
           onClick={() => setMenuOpen(false)}
@@ -330,7 +342,7 @@ export default function Header() {
         >
           About Us
         </Link>
-      </div>
+      </nav>
       {/* =====================================================
           MENU OVERLAY
       ===================================================== */}
